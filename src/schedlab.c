@@ -320,9 +320,21 @@ static void run_algorithm(Algorithm alg) {
 
 // Parses command-line arguments, loads workload, and simulates all scheduling algorithms
 int main(int argc, char **argv) {
+    // Default workload so the program also works when launched from an IDE with no arguments
+    const char *path = argv[1];
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s workload.txt [RR_quantum] [aging_interval]\n", argv[0]);
-        return 1;
+        const char *candidates[] = {"workloads/sample.txt", "../workloads/sample.txt",
+                                    "/home/sakwe/Desktop/SchedLab/workloads/sample.txt"};
+        path = NULL;
+        for (int i = 0; i < 3; ++i) {
+            FILE *f = fopen(candidates[i], "r");
+            if (f) { fclose(f); path = candidates[i]; break; }
+        }
+        if (!path) {
+            fprintf(stderr, "Usage: %s workload.txt [RR_quantum] [aging_interval]\n", argv[0]);
+            return 1;
+        }
+        printf("No workload given, using %s\n\n", path);
     }
     if (argc >= 3) rr_quantum = atoi(argv[2]);
     if (argc >= 4) aging_interval = atoi(argv[3]);
@@ -330,7 +342,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Quantum and aging interval must be positive.\n");
         return 1;
     }
-    if (!load_workload(argv[1])) return 1;
+    if (!load_workload(path)) return 1;
 
     // Run each scheduling algorithm sequentially on the loaded workload
     for (int a = FCFS; a <= ROUND_ROBIN; ++a)
