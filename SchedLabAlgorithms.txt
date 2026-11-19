@@ -1,0 +1,602 @@
+PROJECT 11 – SCHEDLAB
+CEF427: ADVANCED OPERATING SYSTEMS
+
+PROJECT TITLE:
+SchedLab – From Scheduling Theory to the Real Linux and Windows Schedulers
+
+TOPIC 1: CPU SCHEDULING SIMULATOR
+
+ALGORITHM 1: MAIN CPU SCHEDULING SIMULATOR
+
+Purpose:
+To read process information from a workload file, simulate different CPU scheduling algorithms and calculate their performance metrics.
+
+Algorithm: CPU_SCHEDULING_SIMULATOR
+
+1. Start.
+2. Read the workload file.
+3. Extract the process name, arrival time, CPU burst(s), I/O burst(s) and priority of each process.
+4. Initialize all processes with the NEW state.
+5. Initialize the remaining CPU burst, waiting time, turnaround time, response time and completion time of each process.
+6. Ask the user to select a scheduling algorithm.
+7. Execute the selected scheduling algorithm:
+   - FCFS
+   - SJF
+   - SRTF
+   - Priority Scheduling with Aging
+   - Round Robin
+8. Generate the Gantt chart.
+9. Calculate the waiting time of each process.
+10. Calculate the turnaround time of each process.
+11. Calculate the response time of each process.
+12. Calculate the average waiting time.
+13. Calculate the average turnaround time.
+14. Calculate the average response time.
+15. Calculate CPU utilization.
+16. Calculate the number of context switches.
+17. Display all results.
+18. Stop.
+
+ALGORITHM 2: FIRST COME FIRST SERVED (FCFS)
+
+Purpose:
+To execute processes according to their arrival order in the ready queue.
+
+Algorithm: FCFS
+
+1. Start.
+2. Read the list of processes.
+3. Sort the processes according to their arrival times.
+4. Initialize the current time to zero.
+5. Check whether there are unfinished processes.
+6. If the ready queue is empty, advance the current time to the next process arrival or I/O completion.
+7. Otherwise, select the first process in the ready queue.
+8. If the process is executing for the first time, calculate and record its response time.
+9. Execute the selected process until its current CPU burst is completed.
+10. Update the current time.
+11. If the process has another CPU burst, move it to the BLOCKED state and schedule its I/O operation.
+12. If no more CPU bursts remain, mark the process as TERMINATED and record its completion time.
+13. When an I/O operation finishes, return the process to the READY queue.
+14. Repeat until all processes have terminated.
+15. Calculate the performance metrics.
+16. Display the Gantt chart and results.
+17. Stop.
+
+ALGORITHM 3: SHORTEST JOB FIRST (SJF)
+
+Purpose:
+To select and execute the process with the shortest next CPU burst.
+
+Algorithm: SJF
+
+1. Start.
+2. Read the list of processes.
+3. Initialize the current time to zero.
+4. Check whether there are unfinished processes.
+5. Identify all processes that have arrived and are in the READY state.
+6. If the ready queue is empty, advance time to the next process arrival or I/O completion.
+7. Otherwise, select the process with the shortest next CPU burst.
+8. If two processes have the same burst time, select the one that arrived first.
+9. If the selected process is executing for the first time, record its response time.
+10. Execute the selected process until its current CPU burst is completed.
+11. Update the current time.
+12. If the process has another CPU burst, move it to the BLOCKED state and schedule its I/O operation.
+13. Otherwise, mark it as TERMINATED and record its completion time.
+14. Return processes whose I/O operations have completed to the READY queue.
+15. Repeat until all processes have terminated.
+16. Calculate the performance metrics.
+17. Display the Gantt chart and results.
+18. Stop.
+
+ALGORITHM 4: SHORTEST REMAINING TIME FIRST (SRTF)
+
+Purpose:
+To execute the process with the shortest remaining CPU burst and allow preemption when a shorter process becomes available.
+
+Algorithm: SRTF
+
+1. Start.
+2. Read the list of processes.
+3. Initialize the current time to zero.
+4. Check whether there are unfinished processes.
+5. Identify all processes that have arrived and are in the READY state.
+6. If the ready queue is empty, advance time to the next process arrival or I/O completion.
+7. Otherwise, select the process with the shortest remaining CPU burst.
+8. Compare the selected process with the currently running process.
+9. If another process has a shorter remaining burst, preempt the currently running process and return it to the READY queue.
+10. If the selected process is executing for the first time, record its response time.
+11. Execute the selected process for one time unit.
+12. Reduce its remaining CPU burst by one.
+13. Increase the current time by one.
+14. Check whether a new process has arrived or an I/O operation has completed.
+15. If the current CPU burst is completed, move the process to BLOCKED if another CPU burst remains, or TERMINATED otherwise.
+16. Repeat until all processes have terminated.
+17. Calculate the performance metrics.
+18. Display the Gantt chart and results.
+19. Stop.
+
+ALGORITHM 5: PRIORITY SCHEDULING WITH AGING
+
+Purpose:
+To execute processes according to their priorities while gradually increasing the priority of processes that have waited for a long time.
+
+Algorithm: PRIORITY_SCHEDULING_WITH_AGING
+
+1. Start.
+2. Read the list of processes.
+3. Initialize the current time to zero.
+4. Set the aging interval.
+5. Check whether there are unfinished processes.
+6. Identify all processes in the READY state.
+7. If the ready queue is empty, advance time to the next process arrival or I/O completion.
+8. Otherwise, calculate the effective priority of every ready process.
+9. Calculate the effective priority using the formula:
+
+   Effective Priority = Base Priority - (Waiting Time / Aging Interval)
+
+10. If the effective priority is less than zero, set it to zero.
+11. Select the process with the highest effective priority. Assume a smaller priority number represents a higher priority.
+12. If two processes have equal priority, select the one that arrived first.
+13. Execute the selected process for one time unit.
+14. Update the current time and remaining CPU burst.
+15. Check for new process arrivals and completed I/O operations.
+16. Recalculate the effective priorities.
+17. If another process now has a higher priority, preempt the running process.
+18. If the current CPU burst is completed, move the process to BLOCKED if another CPU burst remains, or TERMINATED otherwise.
+19. Repeat until all processes have terminated.
+20. Calculate the performance metrics.
+21. Display the Gantt chart and results.
+22. Stop.
+
+ALGORITHM 6: ROUND ROBIN (RR)
+
+Purpose:
+To allocate CPU time to each process using a fixed time quantum.
+
+Algorithm: ROUND_ROBIN
+
+1. Start.
+2. Read the list of processes.
+3. Read the time quantum from the command line.
+4. Initialize the current time to zero.
+5. Create an empty READY queue.
+6. Check whether there are unfinished processes.
+7. Add newly arrived processes to the READY queue.
+8. If the ready queue is empty, advance time to the next process arrival or I/O completion.
+9. Otherwise, remove the first process from the READY queue.
+10. If the process is executing for the first time, record its response time.
+11. Calculate the execution time as the minimum between the time quantum and the remaining CPU burst.
+12. Execute the process for the calculated execution time.
+13. Update the current time and remaining CPU burst.
+14. Add newly arrived processes to the READY queue in arrival order.
+15. If the process has completed its CPU burst and has another CPU burst, move it to BLOCKED and schedule its I/O operation.
+16. If all its CPU bursts are completed, mark it as TERMINATED.
+17. If the time quantum expires before the CPU burst is completed, return the process to the end of the READY queue.
+18. Repeat until all processes have terminated.
+19. Calculate the performance metrics.
+20. Display the Gantt chart and results.
+21. Stop.
+
+TOPIC 2: PERFORMANCE METRICS CALCULATION
+
+ALGORITHM 7: CALCULATION OF SCHEDULING PERFORMANCE METRICS
+
+Purpose:
+To calculate the waiting time, turnaround time, response time, CPU utilization, average values and context switches for each scheduling algorithm.
+
+Algorithm: CALCULATE_PERFORMANCE_METRICS
+
+1. Start.
+2. Initialize the total waiting time to zero.
+3. Initialize the total turnaround time to zero.
+4. Initialize the total response time to zero.
+5. Initialize the CPU busy time to zero.
+6. For each process, calculate its turnaround time using:
+
+   Turnaround Time = Completion Time - Arrival Time
+
+7. Calculate its waiting time using:
+
+   Waiting Time = Turnaround Time - Total CPU Time - Total I/O Time
+
+8. Calculate its response time using:
+
+   Response Time = First Start Time - Arrival Time
+
+9. Add the waiting time to the total waiting time.
+10. Add the turnaround time to the total turnaround time.
+11. Add the response time to the total response time.
+12. Calculate the average waiting time:
+
+   Average Waiting Time = Total Waiting Time / Number of Processes
+
+13. Calculate the average turnaround time:
+
+   Average Turnaround Time = Total Turnaround Time / Number of Processes
+
+14. Calculate the average response time:
+
+   Average Response Time = Total Response Time / Number of Processes
+
+15. Calculate CPU utilization:
+
+   CPU Utilization = (CPU Busy Time / Total Simulation Time) x 100
+
+16. Count the number of context switches by checking changes between consecutive executing processes.
+17. Display all calculated metrics.
+18. Stop.
+
+ALGORITHM 8: GANTT CHART GENERATION
+
+Purpose:
+To display the order in which processes execute on the CPU.
+
+Algorithm: GENERATE_GANTT_CHART
+
+1. Start.
+2. Create an empty Gantt chart.
+3. Read the CPU execution history.
+4. Identify the process executing during each time interval.
+5. Record the process name.
+6. Record its starting time.
+7. Record its finishing time.
+8. If the CPU is not executing any process, record IDLE.
+9. Arrange all execution intervals in chronological order.
+10. Display the Gantt chart.
+11. Display the starting and finishing times.
+12. Stop.
+
+TOPIC 3: REAL LINUX SCHEDULER EXPERIMENTS
+
+ALGORITHM 9: LINUX WORKER PROCESS LAUNCHER
+
+Purpose:
+To create multiple worker processes using fork(), assign scheduling priorities and CPU affinity, and collect their execution statistics.
+
+Algorithm: LINUX_WORKER_LAUNCHER
+
+1. Start.
+2. Read the number of workers to create.
+3. Read the configuration of each worker, including its workload type, nice value, CPU affinity and execution duration.
+4. Create a results array.
+5. Repeat the following steps for each worker.
+6. Create a child process using fork().
+7. If fork() fails, display an error message.
+8. If the process is a child process:
+   - Assign its nice value using setpriority().
+   - Assign CPU affinity using sched_setaffinity() if requested.
+   - Record its starting time using clock_gettime().
+   - If the worker is CPU-bound, perform intensive calculations.
+   - If the worker is I/O-bound, perform repeated I/O operations.
+   - If the worker is mixed, alternate between CPU calculations and I/O operations.
+   - Record its finishing time.
+   - Exit the child process.
+9. If the process is the parent process, store the child process ID.
+10. Wait for each child process using wait4().
+11. Collect the resource usage information.
+12. Record user CPU time, system CPU time, elapsed time, voluntary context switches and involuntary context switches.
+13. Store the results for each worker.
+14. Calculate the CPU share of each worker.
+15. Display the measurements.
+16. Save the results to a CSV file.
+17. Stop.
+
+ALGORITHM 10: LINUX EXPERIMENT 1 – NICE 0 VS NICE 10
+
+Purpose:
+To compare the CPU allocation of two CPU-bound processes with different nice values on one CPU core.
+
+Algorithm: NICE_PRIORITY_EXPERIMENT
+
+1. Start.
+2. Create the first worker process P1.
+3. Assign P1 a nice value of 0 using setpriority().
+4. Pin P1 to CPU core 0 using sched_setaffinity().
+5. Create the second worker process P2.
+6. Assign P2 a nice value of 10 using setpriority().
+7. Pin P2 to CPU core 0 using sched_setaffinity().
+8. Start both worker processes.
+9. Allow both workers to perform CPU-intensive calculations for the same measurement period.
+10. Wait for both workers to terminate.
+11. Collect the CPU execution time of P1 and P2.
+12. Calculate the CPU share of P1 and P2.
+13. Compare the measured CPU shares with the Linux fair scheduler's nice weights.
+14. Display the results.
+15. Stop.
+
+ALGORITHM 11: LINUX EXPERIMENT 2 – CPU-BOUND VS I/O-BOUND
+
+Purpose:
+To investigate how Linux schedules CPU-bound and I/O-bound processes when they execute together.
+
+Algorithm: CPU_IO_EXPERIMENT
+
+1. Start.
+2. Create a CPU-bound worker process P1.
+3. Create an I/O-bound worker process P2.
+4. Assign both workers the same nice value.
+5. Pin both workers to the same CPU core.
+6. Start both workers.
+7. Allow P1 to perform continuous CPU calculations.
+8. Allow P2 to perform repeated I/O operations.
+9. Record the elapsed time of each worker.
+10. Collect CPU execution time and context switches.
+11. Compare the response and execution behaviour of both workers.
+12. Display the results.
+13. Stop.
+
+ALGORITHM 12: LINUX EXPERIMENT 3 – MULTIPROCESSOR SCHEDULING
+
+Purpose:
+To compare process execution on one, two and four CPU cores.
+
+Algorithm: LINUX_MULTICORE_EXPERIMENT
+
+1. Start.
+2. Define the CPU core configurations as 1, 2 and 4.
+3. Select the first CPU core configuration.
+4. Create the same number of worker processes.
+5. Assign CPU affinity according to the selected number of cores.
+6. Start all worker processes.
+7. Allow all workers to execute the same workload.
+8. Measure the elapsed time of each worker.
+9. Collect CPU execution time and context switches.
+10. Store the results.
+11. Repeat the experiment using two CPU cores.
+12. Repeat the experiment using four CPU cores.
+13. Compare the results from one, two and four cores.
+14. Display the results.
+15. Stop.
+
+TOPIC 4: REAL WINDOWS SCHEDULER EXPERIMENTS
+
+ALGORITHM 13: WINDOWS WORKER PROCESS LAUNCHER
+
+Purpose:
+To create worker processes using CreateProcess(), assign priority classes and CPU affinity, and measure their execution times.
+
+Algorithm: WINDOWS_WORKER_LAUNCHER
+
+1. Start.
+2. Read the number of workers to create.
+3. Read the configuration of each worker, including workload type, priority class, CPU affinity and execution duration.
+4. Repeat the following steps for each worker.
+5. Create the worker process using CreateProcess().
+6. If process creation fails, display an error message.
+7. Otherwise, assign its priority class using SetPriorityClass().
+8. Assign CPU affinity using SetProcessAffinityMask().
+9. Start measuring elapsed time using QueryPerformanceCounter().
+10. Allow the worker to execute its assigned workload.
+11. Wait for each worker to terminate using WaitForSingleObject().
+12. Retrieve execution times using GetProcessTimes().
+13. Calculate user CPU time.
+14. Calculate kernel CPU time.
+15. Calculate total CPU time.
+16. Calculate elapsed time.
+17. Store the results.
+18. Calculate the CPU share of each worker.
+19. Display the measurements.
+20. Save the results to a CSV file.
+21. Stop.
+
+ALGORITHM 14: WINDOWS PRIORITY CLASS EXPERIMENT
+
+Purpose:
+To investigate how Windows schedules processes with different priority classes.
+
+Algorithm: WINDOWS_PRIORITY_EXPERIMENT
+
+1. Start.
+2. Create the first worker process P1.
+3. Assign P1 the NORMAL_PRIORITY_CLASS priority.
+4. Create the second worker process P2.
+5. Assign P2 the HIGH_PRIORITY_CLASS priority.
+6. Create the third worker process P3.
+7. Assign P3 the IDLE_PRIORITY_CLASS priority.
+8. Assign all workers to the same CPU core using SetProcessAffinityMask().
+9. Start all workers.
+10. Allow all workers to execute the same CPU-intensive workload.
+11. Wait for all workers to terminate.
+12. Collect their CPU execution times using GetProcessTimes().
+13. Calculate the CPU share of each worker.
+14. Compare the CPU allocation of the three workers.
+15. Display the results.
+16. Stop.
+
+ALGORITHM 15: WINDOWS MULTIPROCESSOR EXPERIMENT
+
+Purpose:
+To compare Windows scheduling behaviour when worker processes execute on one, two and four CPU cores.
+
+Algorithm: WINDOWS_MULTICORE_EXPERIMENT
+
+1. Start.
+2. Define the CPU core configurations as one, two and four.
+3. Select the first CPU core configuration.
+4. Create the same number of worker processes.
+5. Assign CPU affinity using SetProcessAffinityMask().
+6. Start all worker processes.
+7. Allow the workers to execute the same workload.
+8. Wait for all workers to finish.
+9. Collect CPU execution times using GetProcessTimes().
+10. Measure elapsed time.
+11. Store the results.
+12. Repeat the experiment using two CPU cores.
+13. Repeat the experiment using four CPU cores.
+14. Compare the execution times and CPU usage.
+15. Display the results.
+16. Stop.
+
+TOPIC 5: PERFORMANCE ANALYSIS AND GRAPHS
+
+ALGORITHM 16: COMPARISON OF LINUX, WINDOWS AND SIMULATOR RESULTS
+
+Purpose:
+To analyse the differences between theoretical CPU scheduling algorithms and the actual scheduling behaviour of Linux and Windows.
+
+Algorithm: PERFORMANCE_COMPARISON
+
+1. Start.
+2. Load the simulator results.
+3. Load the Linux experiment results.
+4. Load the Windows experiment results.
+5. Compare CPU utilization.
+6. Compare CPU execution time.
+7. Compare elapsed time.
+8. Compare context switches.
+9. Compare waiting time where measurable.
+10. Compare response time where measurable.
+11. Generate a graph showing the average waiting time for each scheduling algorithm.
+12. Generate a graph showing the average turnaround time for each scheduling algorithm.
+13. Generate a graph showing the average response time for each scheduling algorithm.
+14. Generate a graph comparing CPU utilization.
+15. Generate a graph showing CPU share by process priority.
+16. Generate a graph comparing execution time on one, two and four cores.
+17. Generate a graph comparing context switches.
+18. Analyse the differences between the simulator and the real operating systems.
+19. Explain why the measured results differ from the theoretical results.
+20. Present the final discussion.
+21. Stop.
+
+TOPIC 6: OPTIONAL EXTENSIONS
+
+ALGORITHM 17: MULTILEVEL FEEDBACK QUEUE (MLFQ)
+
+Purpose:
+To schedule processes using multiple priority queues with different time quanta.
+
+Algorithm: MLFQ
+
+1. Start.
+2. Create three ready queues: Q1, Q2 and Q3.
+3. Assign the highest priority to Q1, medium priority to Q2 and lowest priority to Q3.
+4. Assign a time quantum of 2 to Q1.
+5. Assign a time quantum of 4 to Q2.
+6. Assign a time quantum of 8 to Q3.
+7. Place all newly arriving processes in Q1.
+8. Check whether there are unfinished processes.
+9. Select a process from the highest-priority non-empty queue.
+10. Execute the selected process using its queue's time quantum.
+11. If the process finishes, mark it as TERMINATED.
+12. If the time quantum expires before the process finishes, move it to the next lower-priority queue.
+13. If the process requests I/O, move it to the BLOCKED state.
+14. When the I/O operation completes, return the process to an appropriate ready queue.
+15. Periodically increase the priority of waiting processes to prevent starvation.
+16. Repeat until all processes have terminated.
+17. Calculate the performance metrics.
+18. Display the Gantt chart.
+19. Stop.
+
+ALGORITHM 18: LINUX REAL-TIME SCHEDULING EXPERIMENT (SCHED_FIFO)
+
+Purpose:
+To observe the effect of a real-time process on normal processes in Linux.
+
+Algorithm: REALTIME_SCHEDULING_EXPERIMENT
+
+1. Start.
+2. Create normal worker processes.
+3. Create a real-time worker process.
+4. Assign the real-time worker the SCHED_FIFO scheduling policy using sched_setscheduler() or chrt.
+5. Assign an appropriate real-time priority.
+6. Ensure that the real-time worker executes a bounded loop.
+7. Start all processes.
+8. Record the CPU execution time of each process.
+9. Record the elapsed time of each process.
+10. Observe the execution behaviour of normal processes.
+11. Compare the results.
+12. Display the observations.
+13. Stop.
+
+ALGORITHM 19: RATE MONOTONIC SCHEDULING (RM)
+
+Purpose:
+To determine whether a set of periodic real-time tasks can meet their deadlines using Rate Monotonic scheduling.
+
+Algorithm: RATE_MONOTONIC
+
+1. Start.
+2. Read the number of periodic tasks.
+3. For each task, read its execution time (C), period (T) and relative deadline (D).
+4. Sort the tasks in ascending order of their periods.
+5. Assign the highest priority to the task with the shortest period.
+6. Calculate processor utilization using:
+
+   U = Sum of (Ci / Ti)
+
+7. Calculate the RM utilization bound using:
+
+   Ubound = n x (2^(1/n) - 1)
+
+8. Compare processor utilization with the RM utilization bound.
+9. If U is less than or equal to Ubound, the task set passes the sufficient schedulability test.
+10. Otherwise, the test is inconclusive.
+11. Display the results.
+12. Stop.
+
+ALGORITHM 20: EARLIEST DEADLINE FIRST (EDF)
+
+Purpose:
+To schedule periodic real-time tasks according to their earliest absolute deadlines.
+
+Algorithm: EARLIEST_DEADLINE_FIRST
+
+1. Start.
+2. Read the number of periodic tasks.
+3. Read the execution time, period and relative deadline of each task.
+4. Calculate processor utilization using:
+
+   U = Sum of (Ci / Ti)
+
+5. If processor utilization is less than or equal to 1, the task set is schedulable under standard uniprocessor EDF assumptions when deadlines equal periods.
+6. Otherwise, the task set is not schedulable under those assumptions.
+7. Identify all ready tasks.
+8. Calculate the absolute deadline of each ready task.
+9. Select the task with the earliest absolute deadline.
+10. Execute the selected task.
+11. If a new task arrives with an earlier deadline, preempt the currently running task.
+12. Check whether each task meets its deadline.
+13. Repeat until the simulation ends.
+14. Display the scheduling results.
+15. Stop.
+
+TOPIC 7: SUMMARY OF ALL ALGORITHMS
+
+1. Main CPU Scheduling Simulator – Simulator.
+2. First Come First Served (FCFS) – CPU Scheduling.
+3. Shortest Job First (SJF) – CPU Scheduling.
+4. Shortest Remaining Time First (SRTF) – CPU Scheduling.
+5. Priority Scheduling with Aging – CPU Scheduling.
+6. Round Robin (RR) – CPU Scheduling.
+7. Performance Metrics Calculation – Simulator.
+8. Gantt Chart Generation – Simulator.
+9. Linux Worker Process Launcher – Linux.
+10. Nice 0 vs Nice 10 Experiment – Linux.
+11. CPU-bound vs I/O-bound Experiment – Linux.
+12. Linux Multiprocessor Scheduling – Linux.
+13. Windows Worker Process Launcher – Windows.
+14. Windows Priority Class Experiment – Windows.
+15. Windows Multiprocessor Experiment – Windows.
+16. Performance Comparison – Analysis.
+17. Multilevel Feedback Queue (MLFQ) – Extension.
+18. SCHED_FIFO Experiment – Extension.
+19. Rate Monotonic Scheduling (RM) – Extension.
+20. Earliest Deadline First (EDF) – Extension.
+
+IMPORTANT IMPLEMENTATION NOTES
+
+1. Model CPU execution and I/O completion separately. Multiple processes should be able to perform I/O while another process uses the CPU.
+
+2. Advance the simulation clock, update I/O timers, admit new arrivals and then apply the scheduling policy.
+
+3. Use a consistent event-handling policy for arrivals, CPU burst completion and I/O completion.
+
+4. For the simulator, use the same workload, arrival times, burst definitions and tie-breaking rules as the TD/TP exercises.
+
+5. For Linux, ru_nvcsw represents voluntary context switches and ru_nivcsw represents involuntary context switches in struct rusage.
+
+6. For Windows, GetProcessTimes() provides user and kernel CPU times but does not directly provide voluntary and involuntary context-switch counts. Use Windows Performance Recorder/ETW or suitable performance counters for context-switch measurements.
+
+7. Run the SCHED_FIFO experiment inside a virtual machine with a bounded execution period and a way to terminate the real-time worker.
+
+8. The Linux and Windows experiments measure real scheduler behaviour. Their results are not expected to match the theoretical simulator exactly.
